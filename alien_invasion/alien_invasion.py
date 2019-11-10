@@ -35,7 +35,7 @@ def run_game():
     gf.create_fleet(ai_settings, screen, ship, aliens)
 
     # Background color.
-    bg_color = (200, 200, 200)
+    bg_color = (230, 230, 230)
 
     # Start the main loop for the game.
     while True:
@@ -47,18 +47,6 @@ def run_game():
             gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets)
       
         gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button)
-
-        # Watch for the keyboard and mouse events.
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-
-        # Redraw the screen during each pass through the loop.
-        screen.fill(ai_settings.bg_color)
-        ship.blitme()  
-
-        # Make the most recently drawn screen visible
-        pygame.display.flip()  
 
 run_game()
 
