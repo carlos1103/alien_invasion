@@ -2,6 +2,7 @@ import sys
 from time import sleep
 
 import pygame
+
 from bullet import Bullet
 from alien import Alien
 
@@ -12,9 +13,9 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
     elif event.key == pygame.K_LEFT:
                ship.moving_left = True
     elif event.key == pygame.K_SPACE:
-       fire_bullet(ai_settings, screen, ship, bullets)
+               fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
-            sys.exit()   
+               sys.exit()   
 
 def fire_bullet(ai_settings, screen, ship, bullets):
     """Fire a bullet if limit not reached yet."""
@@ -37,13 +38,21 @@ def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bull
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+
+        elif event.type == pygame.KEYDOWN:
+            check_keydown_events(event, ai_settings, screen, ship, bullets)
+
+        elif event.type == pygame.KEYUP:
+            check_keyup_events(event, ship)
+                
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y)
 
 def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens, bullets, mouse_x, mouse_y):
     """Start a new game when the player click Play."""
-    if play_button.rect.collidepoint(mouse_x, mouse_y):
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
         # Reset the game settings.
         ai_settings.initialize_dynamic_settings()
 
@@ -71,6 +80,9 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
 
 def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets, play_button):
     """Update images on the screen and flip to the new screen."""
+    # Redraw the screen, each pass through the loop.
+    screen.fill(ai_settings.bg_color)
+    
     # Redraw all bullets behind ship and aliens.
     for bullet in bullets.sprites():
         bullet.draw_bullet()
